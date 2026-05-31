@@ -1,0 +1,166 @@
+
+// P1 - Student Class
+
+class Student {
+
+  // P1a - Constructor
+
+  constructor(name, scores) {
+    this.name = name;
+    this.scores = scores;
+  }
+
+  // P1b - Average Getter
+
+  get average() {
+    let total = 0;
+
+    for (let i = 0; i < this.scores.length; i++) {
+      total += this.scores[i];
+    }
+
+    return total / this.scores.length;
+  }
+
+  // P1c - Letter Grade Getter
+
+  get letterGrade() {
+    const avg = this.average;
+
+    if (avg >= 90) {
+      return "A";
+    } else if (avg >= 80) {
+      return "B";
+    } else if (avg >= 70) {
+      return "C";
+    } else if (avg >= 60) {
+      return "D";
+    } else {
+      return "F";
+    }
+  }
+
+  // P1d - Summary Method
+
+  summary() {
+    let highest = this.scores[0];
+    let lowest = this.scores[0];
+
+    for (let i = 1; i < this.scores.length; i++) {
+
+      if (this.scores[i] > highest) {
+        highest = this.scores[i];
+      }
+
+      if (this.scores[i] < lowest) {
+        lowest = this.scores[i];
+      }
+    }
+
+    return {
+      highest,
+      lowest
+    };
+  }
+}
+
+// P2a - Parse argv
+
+console.log("\nArguments Received:");
+console.log(process.argv);
+
+const name = process.argv[2];
+
+const scores = process.argv
+  .slice(3)
+  .map(Number);
+
+// P2b - Validation
+
+if (scores.length < 3) {
+  console.log("\nError: Please provide a name and at least 3 scores.");
+
+  console.log(
+    '\nExample:\nnode ass1.js "John Doe" 85 90 78'
+  );
+
+  process.exit(1);
+}
+
+
+const student = new Student(name, scores);
+
+
+// P3b - Switch Function
+
+function getRemark(grade) {
+
+  switch (grade) {
+
+    case "A":
+      return "Excellent";
+
+    case "B":
+      return "Good Work";
+
+    case "C":
+      return "Satisfactory";
+
+    case "D":
+      return "Needs Improvement";
+
+    case "F":
+      return "Failing";
+
+    default:
+      return "Unknown";
+  }
+}
+
+// P3c - Destructuring
+
+const [score1, score2, ...remaining] = student.scores;
+
+const { highest, lowest } = student.summary();
+
+const status =
+  student.average >= 60
+    ? "PASS"
+    : "FAIL";
+
+const remark = getRemark(student.letterGrade);
+
+
+console.log(`
+========================================
+              REPORT CARD
+========================================
+
+Student Name : ${student.name}
+
+Scores       : ${student.scores.join(", ")}
+
+Average      : ${student.average.toFixed(1)}
+
+Grade        : ${student.letterGrade}
+
+Status       : ${status}
+
+Remark       : ${remark}
+
+Highest      : ${highest}
+
+Lowest       : ${lowest}
+
+----------------------------------------
+          SCORE BREAKDOWN
+----------------------------------------
+
+Score 1      : ${score1}
+
+Score 2      : ${score2}
+
+Remaining    : ${remaining.join(", ")}
+
+========================================
+`);
